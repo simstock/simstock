@@ -1116,7 +1116,9 @@ var HomeComponent = /** @class */ (function () {
         var _this = this;
         this._authService.is_authed().subscribe(function (_data) {
         }, function (err) {
-            _this._router.navigate(['/login']);
+            if (err.status == 401) {
+                _this._router.navigate(['/login']);
+            }
         });
     };
     HomeComponent = __decorate([
