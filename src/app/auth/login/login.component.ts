@@ -26,14 +26,15 @@ export class LoginComponent implements OnInit {
       password: ""
     };
 
-    // this._authService.is_authed().subscribe(_data => {
-    //   this._router.navigate(['/home']);
-    // })
-    this._authService.authed.subscribe(__state => {
-      if (__state) {
-        this._router.navigate(['/home']);
-      }
+    this._authService.is_authed().subscribe(_data => {
+      this._router.navigate(['/home']);
     })
+
+    // this._authService.authed.subscribe(__state => {
+    //   if (__state) {
+    //     this._router.navigate(['/home']);
+    //   }
+    // })
 
   }
 
