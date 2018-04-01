@@ -605,14 +605,14 @@ var LoginComponent = /** @class */ (function () {
             username: "",
             password: ""
         };
-        // this._authService.is_authed().subscribe(_data => {
-        //   this._router.navigate(['/home']);
-        // })
-        this._authService.authed.subscribe(function (__state) {
-            if (__state) {
-                _this._router.navigate(['/home']);
-            }
+        this._authService.is_authed().subscribe(function (_data) {
+            _this._router.navigate(['/home']);
         });
+        // this._authService.authed.subscribe(__state => {
+        //   if (__state) {
+        //     this._router.navigate(['/home']);
+        //   }
+        // })
     };
     LoginComponent.prototype.ngAfterViewChecked = function () {
         //this._router.navigate(['/home']);
@@ -1126,18 +1126,18 @@ var HomeComponent = /** @class */ (function () {
         this._authService = _authService;
     }
     HomeComponent.prototype.ngOnInit = function () {
-        // this._authService.is_authed().subscribe(_data => {
         var _this = this;
-        // }, err => {
-        //   if (err.status == 401) {
-        //     this._router.navigate(['/login']);
-        //   }
-        // });
-        this._authService.authed.subscribe(function (__state) {
-            if (!__state) {
+        this._authService.is_authed().subscribe(function (_data) {
+        }, function (err) {
+            if (err.status == 401) {
                 _this._router.navigate(['/login']);
             }
         });
+        // this._authService.authed.subscribe(__state => {
+        //   if (!__state) {
+        //     this._router.navigate(['/login']);
+        //   }
+        // })
     };
     HomeComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
