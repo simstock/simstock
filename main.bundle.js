@@ -878,7 +878,7 @@ module.exports = ""
 /***/ "./src/app/home/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"jumbotron\">\r\n  <div class=\"container\">\r\n    <h1 class=\"display-3\">Welcome to SimStock</h1>\r\n    <p>Invest your saving before it is too late.</p>\r\n    <p>\r\n      <a class=\"btn btn-primary btn-lg\" [routerLink]=\"['/market']\" role=\"button\">Start Investing »</a>\r\n    </p>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"col-md-12\" *ngIf=\"ready\">\r\n      <h2>{{user.first}} {{user.last}}</h2>\r\n      <h4 style=\"margin-top:1%\">Cash Available : $ {{user.cash}}</h4>\r\n    </div>\r\n    <div class=\"col-md-12\">\r\n      <h5>\r\n        {{date | date:'yyyy-MM-dd'}}\r\n      </h5>\r\n      <div>\r\n        <canvas *ngIf=\"!good_date\" id=\"dayChart\" height=\"100\"></canvas>\r\n        <div *ngIf=\"no_eqt\" class=\"jumbotron\">\r\n          <div>\r\n            <h1>You don't have any stock currently.</h1>\r\n            <p class=\"lead\">Please go to market to purchase any.</p>\r\n            <p class=\"lead\">Daily earning chart is therefore hidden.</p>\r\n          </div>\r\n        </div>\r\n        <div *ngIf=\"good_date&&!no_eqt\" class=\"jumbotron\">\r\n          <div>\r\n            <h1>Market Closed on {{date | date:'yyyy-MM-dd'}}</h1>\r\n            <p class=\"lead\">It could be weekend or holidays, or market does not open yet (open after 9:30 AM).</p>\r\n            <p class=\"lead\">Daily earning chart is therefore hidden.</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"col-md-12\" style=\"margin-bottom:3%\">\r\n      <h5 style=\"margin-top:3%\">\r\n        {{last_year}} Revenue\r\n      </h5>\r\n      <div>\r\n        <canvas *ngIf=\"!last_year_empty\" id=\"yearChart\" height=\"100\"></canvas>\r\n        <div *ngIf=\"last_year_empty\" class=\"jumbotron\">\r\n          <div>\r\n            <h1>You don't have any profit on year {{last_year}}.</h1>\r\n            <p class=\"lead\">It is kinda sad.</p>\r\n            <p class=\"lead\">Last year earning chart is therefore hidden.</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"jumbotron\">\r\n  <div class=\"container\">\r\n    <h1 class=\"display-3\">Welcome to SimStock</h1>\r\n    <p>Invest your saving before it is too late.</p>\r\n    <p>\r\n      <a class=\"btn btn-primary btn-lg\" [routerLink]=\"['/market']\" role=\"button\">Start Investing »</a>\r\n    </p>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"col-md-12\" *ngIf=\"ready\">\r\n      <h2>{{user.first}} {{user.last}}</h2>\r\n      <h4 style=\"margin-top:1%\">Cash Available : $ {{user.cash}}</h4>\r\n    </div>\r\n    <div class=\"col-md-12\">\r\n      <h5>\r\n        {{date | date:'yyyy-MM-dd'}}\r\n      </h5>\r\n      <div>\r\n        <canvas *ngIf=\"!good_date\" id=\"dayChart\" height=\"100\"></canvas>\r\n        <div *ngIf=\"no_eqt\" class=\"jumbotron\">\r\n          <div>\r\n            <h1>You don't have any stock currently.</h1>\r\n            <p class=\"lead\">Please go to market to purchase any.</p>\r\n            <p class=\"lead\">Daily earning chart is therefore hidden.</p>\r\n          </div>\r\n        </div>\r\n        <div *ngIf=\"good_date&&!no_eqt\" class=\"jumbotron\">\r\n          <div>\r\n            <h1>Market Closed on {{date | date:'yyyy-MM-dd'}}</h1>\r\n            <p class=\"lead\">It could be weekend or holidays, or market does not open yet (open after 9:30 AM).</p>\r\n            <p class=\"lead\">Daily earning chart is therefore hidden.</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"col-md-12\" style=\"margin-bottom:3%\">\r\n      <h5 style=\"margin-top:3%\">\r\n        {{last_year}} Revenue\r\n      </h5>\r\n      <div>\r\n        <div *ngIf=\"last_year_empty\" class=\"jumbotron\">\r\n          <div>\r\n            <h1>You don't have any profit on year {{last_year}}.</h1>\r\n            <p class=\"lead\">It is kinda sad.</p>\r\n            <p class=\"lead\">Last year earning chart is therefore hidden.</p>\r\n          </div>\r\n        </div>\r\n        <canvas id=\"yearChart\" height=\"100\"></canvas>        \r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -964,13 +964,15 @@ var DashboardComponent = /** @class */ (function () {
                 if (_user.eqt_data.length == 0) {
                     _this.good_date = true;
                 }
-                for (var i = 0; i < _user.lastyear.length && !_this.last_year_empty; i++) {
+                for (var i = 0; i < _user.lastyear.length && _this.last_year_empty; i++) {
                     if (_user.lastyear[i] != 0) {
                         _this.last_year_empty = false;
                     }
                 }
                 _this.day_chart(_user.labels, _user.eqt_data, _user.ern_data);
-                _this.year_chart(_user.lastyear);
+                if (!_this.last_year_empty) {
+                    _this.year_chart(_user.lastyear);
+                }
             });
         });
     };
