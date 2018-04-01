@@ -42,7 +42,6 @@
         {{last_year}} Revenue
       </h5>
       <div>
-        <canvas *ngIf="!last_year_empty" id="yearChart" height="100"></canvas>
         <div *ngIf="last_year_empty" class="jumbotron">
           <div>
             <h1>You don't have any profit on year {{last_year}}.</h1>
@@ -50,6 +49,7 @@
             <p class="lead">Last year earning chart is therefore hidden.</p>
           </div>
         </div>
+        <canvas id="yearChart" height="100"></canvas>        
       </div>
     </div>
 

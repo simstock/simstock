@@ -87,13 +87,15 @@ export class DashboardComponent implements OnInit {
         if (_user.eqt_data.length == 0) {
           this.good_date = true;
         }
-        for (let i = 0; i < _user.lastyear.length && !this.last_year_empty; i++) {
+        for (let i = 0; i < _user.lastyear.length && this.last_year_empty; i++) {
           if (_user.lastyear[i] != 0) {
             this.last_year_empty = false;
           }
         }
         this.day_chart(_user.labels, _user.eqt_data, _user.ern_data);
-        this.year_chart(_user.lastyear);
+        if (!this.last_year_empty) {
+          this.year_chart(_user.lastyear);
+        }
       });
     })
 
