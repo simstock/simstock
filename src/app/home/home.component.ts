@@ -15,13 +15,19 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._authService.is_authed().subscribe(_data => {
+    // this._authService.is_authed().subscribe(_data => {
 
-    }, err => {
-	if(err.status == 401) {
-      this._router.navigate(['/login']);
-	}
+    // }, err => {
+    //   if (err.status == 401) {
+    //     this._router.navigate(['/login']);
+    //   }
 
+    // });
+
+    this._authService.authed.subscribe(__state => {
+      if (!__state) {
+        this._router.navigate(['/login']);
+      }
     })
   }
 

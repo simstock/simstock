@@ -26,8 +26,13 @@ export class LoginComponent implements OnInit {
       password: ""
     };
 
-    this._authService.is_authed().subscribe(_data => {
-      this._router.navigate(['/home']);
+    // this._authService.is_authed().subscribe(_data => {
+    //   this._router.navigate(['/home']);
+    // })
+    this._authService.authed.subscribe(__state => {
+      if (__state) {
+        this._router.navigate(['/home']);
+      }
     })
 
   }
@@ -40,13 +45,15 @@ export class LoginComponent implements OnInit {
 
     this._authService.login(this.creds).subscribe(_res => {
       swal({
-        title: "Hola, "+ _res.first + "!",
+        title: "Hola, " + _res.first + "!",
         text: "",
         type: "success",
       });
+      this._authService.auth_change(true);
       this._router.navigate(['/home']);
 
     }, err => {
+      this._authService.auth_change(false);
       swal({
         title: "Unauthorized!",
         text: "Invalid username or password.",

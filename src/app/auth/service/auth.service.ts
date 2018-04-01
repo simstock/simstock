@@ -5,11 +5,18 @@ import { endpoint, httpOptions } from '../../app.endpoints';
 
 import { IAuth } from '../../home/home.interface';
 
+
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+
 @Injectable()
 export class AuthService {
 
   private url = endpoint;
-  private authed: boolean = false;
+  private authed_src = new BehaviorSubject<boolean>(false);
+  authed = this.authed_src.asObservable();
+
+
 
   constructor(
     private _http: HttpClient,
@@ -31,6 +38,10 @@ export class AuthService {
 
   is_authed() {
     return this._http.get<IAuth>(this.url + '/api/auth/profile', httpOptions);
+  }
+
+  auth_change(__state) {
+    this.authed_src.next(__state);
   }
 
 }
