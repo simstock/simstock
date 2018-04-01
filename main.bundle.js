@@ -605,8 +605,13 @@ var LoginComponent = /** @class */ (function () {
             username: "",
             password: ""
         };
-        this._authService.is_authed().subscribe(function (_data) {
-            _this._router.navigate(['/home']);
+        // this._authService.is_authed().subscribe(_data => {
+        //   this._router.navigate(['/home']);
+        // })
+        this._authService.authed.subscribe(function (__state) {
+            if (__state) {
+                _this._router.navigate(['/home']);
+            }
         });
     };
     LoginComponent.prototype.ngAfterViewChecked = function () {
@@ -620,8 +625,10 @@ var LoginComponent = /** @class */ (function () {
                 text: "",
                 type: "success",
             });
+            _this._authService.auth_change(true);
             _this._router.navigate(['/home']);
         }, function (err) {
+            _this._authService.auth_change(false);
             __WEBPACK_IMPORTED_MODULE_3_sweetalert2___default()({
                 title: "Unauthorized!",
                 text: "Invalid username or password.",
@@ -811,6 +818,7 @@ var AuthGuardService = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_endpoints__ = __webpack_require__("./src/app/app.endpoints.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject__ = __webpack_require__("./node_modules/rxjs/_esm5/BehaviorSubject.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -824,12 +832,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AuthService = /** @class */ (function () {
     function AuthService(_http, _router) {
         this._http = _http;
         this._router = _router;
         this.url = __WEBPACK_IMPORTED_MODULE_3__app_endpoints__["a" /* endpoint */];
-        this.authed = false;
+        this.authed_src = new __WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](false);
+        this.authed = this.authed_src.asObservable();
     }
     AuthService.prototype.login = function (creds) {
         return this._http.post(this.url + '/api/auth/login', creds, __WEBPACK_IMPORTED_MODULE_3__app_endpoints__["b" /* httpOptions */]);
@@ -842,6 +852,9 @@ var AuthService = /** @class */ (function () {
     };
     AuthService.prototype.is_authed = function () {
         return this._http.get(this.url + '/api/auth/profile', __WEBPACK_IMPORTED_MODULE_3__app_endpoints__["b" /* httpOptions */]);
+    };
+    AuthService.prototype.auth_change = function (__state) {
+        this.authed_src.next(__state);
     };
     AuthService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
@@ -1113,10 +1126,15 @@ var HomeComponent = /** @class */ (function () {
         this._authService = _authService;
     }
     HomeComponent.prototype.ngOnInit = function () {
+        // this._authService.is_authed().subscribe(_data => {
         var _this = this;
-        this._authService.is_authed().subscribe(function (_data) {
-        }, function (err) {
-            if (err.status == 401) {
+        // }, err => {
+        //   if (err.status == 401) {
+        //     this._router.navigate(['/login']);
+        //   }
+        // });
+        this._authService.authed.subscribe(function (__state) {
+            if (!__state) {
                 _this._router.navigate(['/login']);
             }
         });
