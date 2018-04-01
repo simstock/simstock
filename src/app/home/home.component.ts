@@ -18,7 +18,10 @@ export class HomeComponent implements OnInit {
     this._authService.is_authed().subscribe(_data => {
 
     }, err => {
+	if(err.status == 401) {
       this._router.navigate(['/login']);
+	}
+
     })
   }
 
